@@ -63,7 +63,6 @@ class NewVisitorTest(LiveServerTestCase):
 
     # The page has generated a URL, Richard visits the URL and see his To-Do
     # list with 2 items.
-    
 
     # Confirm the web app works, he goes back to practice TDD.
 
@@ -77,17 +76,20 @@ class NewVisitorTest(LiveServerTestCase):
     richard_list_url = self.browser.current_url
     self.assertRegex(richard_list_url, '/lists/.+')
 
-    ## A new user, Karina comes along to the site.
-    # Use a new browser session to make sure that no information of 
-    # other users is coming through from cookies.
+    ## A new user, Karina comes along to the site, she must not see
+    ## Richard's To-Do list
+    ##--Double hashes (##) indicate meta-comments: comments about
+    ##--  how the test is working and why.
+    # Use a new browser session to make sure that no information of
+    # Richard is coming through from cookies.
     self.browser.quit()
     self.browser = webdriver.Firefox()
-    
+
     # Karina visits the home page. The list of Richard is not there
     self.browser.get(self.live_server_url)
-    page_text = self.browsers.find_element_by_tag_name('body').text
+    page_text = self.browser.find_element_by_tag_name('body').text
     self.assertNotIn('Read and practice chapter 1 of TDD', page_text)
-    self.assserNotIn('Create a new repository in GitHub and push', page_text)
+    self.assertNotIn('Create a new repository in GitHub and push', page_text)
 
     # Karina enters a new item
     input_box = self.browser.find_element_by_id('id_new_item')
